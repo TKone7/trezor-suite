@@ -47,6 +47,7 @@
         "worker-loader": "^3.0.8"
     },
     "dependencies": {
+        "@trezor/utxo-lib": "^1.0.0-beta.10",
         "bignumber.js": "^9.0.1",
         "events": "^3.3.0",
         "ripple-lib": "1.10.0",
