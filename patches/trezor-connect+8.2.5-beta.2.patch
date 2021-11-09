@@ -1,0 +1,38 @@
+diff --git a/node_modules/trezor-connect/lib/backend/BlockchainLink.js b/node_modules/trezor-connect/lib/backend/BlockchainLink.js
+index 4abcb98..1c505de 100644
+--- a/node_modules/trezor-connect/lib/backend/BlockchainLink.js
++++ b/node_modules/trezor-connect/lib/backend/BlockchainLink.js
+@@ -34,6 +34,9 @@ var getWorker = function getWorker(type) {
+     case 'blockfrost':
+       return _workers.BlockfrostWorker;
+ 
++    case 'electrum':
++      return _workers.ElectrumWorker;
++
+     default:
+       return null;
+   }
+@@ -61,7 +64,7 @@ var Blockchain = /*#__PURE__*/function () {
+       name: this.coinInfo.shortcut,
+       worker: worker,
+       server: settings.url,
+-      debug: false
++      debug: true
+     });
+   }
+ 
+diff --git a/node_modules/trezor-connect/lib/env/browser/workers.js b/node_modules/trezor-connect/lib/env/browser/workers.js
+index 05b8a11..7c615ca 100644
+--- a/node_modules/trezor-connect/lib/env/browser/workers.js
++++ b/node_modules/trezor-connect/lib/env/browser/workers.js
+@@ -19,6 +19,10 @@ var _blockfrost = _interopRequireDefault(require("@trezor/blockchain-link/lib/wo
+ 
+ exports.BlockfrostWorker = _blockfrost["default"];
+ 
++var _electrum = _interopRequireDefault(require("@trezor/blockchain-link/lib/workers/electrum"));
++
++exports.ElectrumWorker = _electrum["default"];
++
+ var _transport = _interopRequireDefault(require("@trezor/transport"));
+ 
+ var WebUsbPlugin = function WebUsbPlugin() {
