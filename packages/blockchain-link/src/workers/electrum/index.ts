@@ -1,169 +1,214 @@
 import { CustomError } from '../../constants/errors';
 import { MESSAGES, RESPONSES } from '../../constants';
-import type { Message, Response } from '../../types';
+import { BaseWorker, CONTEXT, ContextType } from '../base';
 import * as M from './methods';
 import * as L from './listeners';
-import WorkerCommon from '../common';
-import { createSocket } from './sockets';
-import { ElectrumClient } from './client/electrum';
+import { ProxySocket } from './sockets/proxy';
 import { CachingElectrumClient } from './client/caching';
+import type { ElectrumClient } from './client/electrum';
+import type { Message, Response } from '../../types';
 
-declare function postMessage(data: Response): void;
+type BlockListener = ReturnType<typeof L.blockListener>;
+type TxListener = ReturnType<typeof L.txListener>;
 
-const common = new WorkerCommon(postMessage);
-const electrumClient = new CachingElectrumClient();
-const blockListener = L.blockListener(electrumClient, common);
-const txListener = L.txListener(electrumClient, common);
+// reason:
+// https://stackoverflow.com/questions/57103834/typescript-omit-a-property-from-all-interfaces-in-a-union-but-keep-the-union-s#answer-57103940
+type Without<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+type Request<T> = T extends any ? T & ContextType<ElectrumClient> : never;
+type MessageType = Message['type'];
+type ResponseType<T extends MessageType> = T extends typeof MESSAGES.GET_INFO
+    ? typeof RESPONSES.GET_INFO
+    : T extends typeof MESSAGES.GET_BLOCK_HASH
+    ? typeof RESPONSES.GET_BLOCK_HASH
+    : T extends typeof MESSAGES.GET_ACCOUNT_INFO
+    ? typeof RESPONSES.GET_ACCOUNT_INFO
+    : T extends typeof MESSAGES.GET_ACCOUNT_UTXO
+    ? typeof RESPONSES.GET_ACCOUNT_UTXO
+    : T extends typeof MESSAGES.GET_TRANSACTION
+    ? typeof RESPONSES.GET_TRANSACTION
+    : T extends typeof MESSAGES.GET_ACCOUNT_BALANCE_HISTORY
+    ? typeof RESPONSES.GET_ACCOUNT_BALANCE_HISTORY
+    : T extends typeof MESSAGES.ESTIMATE_FEE
+    ? typeof RESPONSES.ESTIMATE_FEE
+    : T extends typeof MESSAGES.PUSH_TRANSACTION
+    ? typeof RESPONSES.PUSH_TRANSACTION
+    : T extends typeof MESSAGES.SUBSCRIBE
+    ? typeof RESPONSES.SUBSCRIBE
+    : T extends typeof MESSAGES.UNSUBSCRIBE
+    ? typeof RESPONSES.UNSUBSCRIBE
+    : never;
+type Reply<T extends MessageType> = Without<Extract<Response, { type: ResponseType<T> }>, 'id'>;
 
-const connect = async () => {
-    if (!electrumClient.connected()) {
-        const { server, debug, timeout, keepAlive } = common.getSettings();
-        const { url, socket } = createSocket(server, { timeout, keepAlive });
-        await electrumClient.connect(socket, {
-            url,
-            debug,
-            client: {
-                name: 'blockchain-link',
-                protocolVersion: '1.4',
-            },
-        });
-    }
-    return electrumClient;
-};
-
-const disconnect = ({ id }: { id: number }) => {
-    if (electrumClient.connected()) {
-        electrumClient.close();
-    }
-    common.response({ id, type: RESPONSES.DISCONNECTED, payload: true });
-};
-
-const cleanup = () => {};
-
-const call = <M extends Message & { payload: any }, R extends Response>(
-    method: (
-        client: ElectrumClient,
-        payload: M['payload'],
-        common: WorkerCommon
-    ) => Promise<R['payload']>,
-    data: M,
-    type: R['type']
-) =>
-    connect()
-        .then(client => method(client, data.payload, common))
-        .then(res => common.response({ id: data.id, type, payload: res }))
-        .catch(error => common.errorHandler({ id: data.id, error }));
-
-// WebWorker message handling
-export const onmessage = (event: { data: Message }) => {
-    if (!event.data) return;
-    const { data } = event;
-    const { id, type } = data;
-
-    common.debug('onmessage', data);
-    switch (data.type) {
-        case MESSAGES.HANDSHAKE:
-            common.setSettings(data.settings);
-            break;
-        case MESSAGES.CONNECT:
-            connect()
-                .then(() => common.response({ id, type: RESPONSES.CONNECT, payload: true }))
-                .catch(error => common.errorHandler({ id, error }));
-            break;
-        case MESSAGES.DISCONNECT:
-            disconnect(data);
-            break;
+const onRequest = async <T extends Message>(
+    request: Request<T>,
+    blockListener: BlockListener,
+    txListener: TxListener
+): Promise<Reply<typeof request.type>> => {
+    const client = await request.connect();
+    switch (request.type) {
         case MESSAGES.GET_INFO:
-            connect()
-                .then(client => M.getInfo(client, common))
-                .then(res =>
-                    common.response({ id: data.id, type: RESPONSES.GET_INFO, payload: res })
-                )
-                .catch(error => common.errorHandler({ id: data.id, error }));
-            break;
+            return {
+                type: RESPONSES.GET_INFO,
+                payload: await M.getInfo(client),
+            };
         case MESSAGES.GET_BLOCK_HASH:
-            call(M.getBlockHash, data, RESPONSES.GET_BLOCK_HASH);
-            break;
+            return {
+                type: RESPONSES.GET_BLOCK_HASH,
+                payload: await M.getBlockHash(client, request.payload),
+            };
         case MESSAGES.GET_ACCOUNT_INFO:
-            call(M.getAccountInfo, data, RESPONSES.GET_ACCOUNT_INFO);
-            break;
+            return {
+                type: RESPONSES.GET_ACCOUNT_INFO,
+                payload: await M.getAccountInfo(client, request.payload),
+            };
         case MESSAGES.GET_ACCOUNT_UTXO:
-            call(M.getAccountUtxo, data, RESPONSES.GET_ACCOUNT_UTXO);
-            break;
+            return {
+                type: RESPONSES.GET_ACCOUNT_UTXO,
+                payload: await M.getAccountUtxo(client, request.payload),
+            };
         case MESSAGES.GET_TRANSACTION:
-            call(M.getTransaction, data, RESPONSES.GET_TRANSACTION);
-            break;
+            return {
+                type: RESPONSES.GET_TRANSACTION,
+                payload: await M.getTransaction(client, request.payload),
+            };
         case MESSAGES.GET_ACCOUNT_BALANCE_HISTORY:
-            call(M.getAccountBalanceHistory, data, RESPONSES.GET_ACCOUNT_BALANCE_HISTORY);
-            break;
+            return {
+                type: RESPONSES.GET_ACCOUNT_BALANCE_HISTORY,
+                payload: await M.getAccountBalanceHistory(client, request.payload),
+            };
         case MESSAGES.ESTIMATE_FEE:
-            call(M.estimateFee, data, RESPONSES.ESTIMATE_FEE);
-            break;
+            return {
+                type: RESPONSES.ESTIMATE_FEE,
+                payload: await M.estimateFee(client, request.payload),
+            };
         case MESSAGES.PUSH_TRANSACTION:
-            call(M.pushTransaction, data, RESPONSES.PUSH_TRANSACTION);
-            break;
+            return {
+                type: RESPONSES.PUSH_TRANSACTION,
+                payload: await M.pushTransaction(client, request.payload),
+            };
         case MESSAGES.SUBSCRIBE:
-            connect()
-                .then(() => {
-                    switch (data.payload.type) {
-                        case 'block':
-                            return blockListener.subscribe();
-                        case 'addresses':
-                        case 'accounts':
-                            return txListener.subscribe(data.payload);
-                        default:
-                            throw new CustomError(
-                                `Subscription ${data.payload.type} not implemented`
-                            );
-                    }
-                })
-                .then(res =>
-                    common.response({ id: data.id, type: RESPONSES.SUBSCRIBE, payload: res })
-                )
-                .catch(error => common.errorHandler({ id: data.id, error }));
-            break;
+            switch (request.payload.type) {
+                case 'block':
+                    return {
+                        type: RESPONSES.SUBSCRIBE,
+                        payload: blockListener.subscribe(),
+                    };
+                case 'addresses':
+                case 'accounts':
+                    return {
+                        type: RESPONSES.SUBSCRIBE,
+                        payload: await txListener.subscribe(request.payload),
+                    };
+                default:
+                    throw new CustomError(`Subscription ${request.payload.type} not implemented`);
+            }
         case MESSAGES.UNSUBSCRIBE:
-            connect()
-                .then(() => {
-                    switch (data.payload.type) {
-                        case 'block':
-                            return blockListener.unsubscribe();
-                        case 'addresses':
-                        case 'accounts':
-                            return txListener.unsubscribe(data.payload);
-                        default:
-                            throw new CustomError(
-                                `Subscription ${data.payload.type} not implemented`
-                            );
-                    }
-                })
-                .then(res =>
-                    common.response({ id: data.id, type: RESPONSES.UNSUBSCRIBE, payload: res })
-                )
-                .catch(error => common.errorHandler({ id: data.id, error }));
-            break;
-        // @ts-ignore this message is used in tests
-        case 'terminate':
-            cleanup();
-            break;
+            switch (request.payload.type) {
+                case 'block':
+                    return {
+                        type: RESPONSES.UNSUBSCRIBE,
+                        payload: blockListener.unsubscribe(),
+                    };
+                case 'addresses':
+                case 'accounts':
+                    return {
+                        type: RESPONSES.UNSUBSCRIBE,
+                        payload: await txListener.unsubscribe(request.payload),
+                    };
+                default:
+                    throw new CustomError(`Subscription ${request.payload.type} not implemented`);
+            }
         // @ts-ignore this message is used in tests
         case 'raw':
-            connect()
-                // @ts-ignore
-                .then(client => client.request(data.payload.method, ...data.payload.params))
-                .then(res =>
-                    // @ts-ignore
-                    common.response({ id, type: data.payload.method, payload: res })
-                );
-            break;
+            // @ts-ignore
+            // eslint-disable-next-line
+            const { method, params } = request.payload;
+            return client
+                .request(method, ...params)
+                .then((res: any) => ({ type: method, payload: res }));
         default:
-            common.errorHandler({
-                id,
-                error: new CustomError('worker_unknown_request', `+${type}`),
-            });
-            break;
+            throw new CustomError('worker_unknown_request', `+${request.type}`);
     }
 };
 
-// Handshake to host
-common.handshake();
+class ElectrumWorker extends BaseWorker<ElectrumClient> {
+    private blockListener?: BlockListener;
+    private txListener?: TxListener;
+
+    private chooseServer(server: string[]): string {
+        if (!server || !Array.isArray(server) || server.length < 1) {
+            throw new CustomError('connect', 'Endpoint not set');
+        }
+        return server[0];
+    }
+
+    async connect(): Promise<ElectrumClient> {
+        if (!this.api?.connected()) {
+            const { server = [], debug, timeout, keepAlive } = this.settings;
+            const url = this.chooseServer(server);
+            const socket = new ProxySocket(url, { timeout, keepAlive });
+            const api = new CachingElectrumClient();
+            await api.connect(socket, {
+                url,
+                debug,
+                client: {
+                    name: 'blockchain-link',
+                    protocolVersion: '1.4',
+                },
+            });
+            this.api = api;
+
+            this.blockListener = L.blockListener(api, this);
+            this.txListener = L.txListener(api, this);
+
+            this.post({
+                id: -1,
+                type: RESPONSES.CONNECTED,
+            });
+        }
+        return this.api;
+    }
+
+    disconnect() {
+        if (this.api?.connected()) {
+            this.api.close();
+        }
+    }
+
+    cleanup() {
+        // TODO
+        if (this.api) {
+            this.api.close();
+        }
+        super.cleanup();
+    }
+
+    async messageHandler(event: { data: Message }) {
+        try {
+            // skip processed messages
+            if (await super.messageHandler(event)) return true;
+
+            const request: Request<Message> = {
+                ...event.data,
+                connect: () => this.connect(),
+                post: (data: Response) => this.post(data),
+                state: this.state,
+            };
+            const response = await onRequest(request, this.blockListener!, this.txListener!);
+            this.post({ id: event.data.id, ...response });
+        } catch (error) {
+            this.errorResponse(event.data.id, error);
+        }
+    }
+}
+
+// export worker factory used in src/index
+export default function Electrum() {
+    return new ElectrumWorker();
+}
+
+if (CONTEXT === 'worker') {
+    // Initialize module if script is running in worker context
+    const module = new ElectrumWorker();
+    onmessage = module.messageHandler.bind(module);
+}

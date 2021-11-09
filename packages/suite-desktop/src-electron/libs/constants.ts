@@ -26,6 +26,7 @@ export const MODULES = [
     'store',
     'udev-install',
     'user-data',
+    'electrum',
 ];
 
 // Modules only used in prod mode

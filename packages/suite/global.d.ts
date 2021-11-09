@@ -11,6 +11,12 @@ type Result<Payload = undefined> = Promise<
       }
 >;
 
+type SocketOptions = {
+    timeout?: number;
+    keepAlive?: boolean;
+    torAddress?: string;
+};
+
 // Interface for exposed Electron API (ipcRenderer)
 interface DesktopApi {
     on: (channel: string, func: (...args: any[]) => any) => void;
@@ -51,6 +57,10 @@ interface DesktopApi {
     getUserDataInfo: () => Result<{ dir: string }>;
     // Udev rules
     installUdevRules: () => Result;
+    // Electrum server
+    electrumConnect: (server: string, options?: SocketOptions) => Promise<boolean>;
+    electrumClose: () => Promise<void>;
+    electrumSend: (msg: string) => void;
 }
 
 interface Window {
