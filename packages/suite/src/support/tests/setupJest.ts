@@ -20,6 +20,11 @@ const getWalletAccount = (account?: Partial<Account>): Account => ({
     index: 0,
     path: "m/44'/60'/0'/0/1",
     descriptor: '0xFA01a39f8Abaeb660c3137f14A310d0b414b2A15',
+    key: `${account?.descriptor ?? '0xFA01a39f8Abaeb660c3137f14A310d0b414b2A15'}-${
+        account?.symbol ?? 'eth'
+    }-${
+        account?.deviceState ?? '7dcccffe70d8bb8bb28a2185daac8e05639490eee913b326097ae1d73abc8b4f'
+    }`,
     accountType: 'normal',
     networkType: 'ethereum',
     symbol: 'eth',
@@ -241,6 +246,11 @@ const getWalletTransaction = (t?: Partial<WalletAccountTransaction>): WalletAcco
         totalOutput: '0.80719868',
     },
     ...t,
+});
+
+export const getCoinSelection = () => ({
+    __esModule: true,
+    default: () => {},
 });
 
 // Mocked TrezorConnect used in various tests
@@ -610,6 +620,7 @@ declare global {
                 getConnectDevice: typeof getConnectDevice;
                 getSuiteDevice: typeof getSuiteDevice;
                 getWalletAccount: typeof getWalletAccount;
+                getCoinSelection: typeof getCoinSelection;
                 getWalletTransaction: typeof getWalletTransaction;
                 getTrezorConnect: typeof getTrezorConnect;
                 getMessageSystemConfig: typeof getMessageSystemConfig;
@@ -632,6 +643,7 @@ global.JestMocks = {
     getConnectDevice,
     getSuiteDevice,
     getWalletAccount,
+    getCoinSelection,
     getWalletTransaction,
     getTrezorConnect,
     getMessageSystemConfig,
