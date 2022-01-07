@@ -78,7 +78,7 @@ export abstract class SocketBase implements ISocket {
             listener.onReceive(chunk);
         });
 
-        socket.on('end', e => {
+        socket.on('end', (e: unknown) => {
             socket.setTimeout(0);
             listener.onEnd(e);
         });

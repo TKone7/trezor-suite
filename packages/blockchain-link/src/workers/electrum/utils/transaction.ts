@@ -1,5 +1,5 @@
 import { arrayToDic, flatten, distinct, sum } from './misc';
-import { scriptToScripthash, btcToSat } from './transform';
+import { btcToSat } from './transform';
 import type { Transaction as BlockbookTransaction } from '../../../types/blockbook';
 import type {
     ElectrumAPI,

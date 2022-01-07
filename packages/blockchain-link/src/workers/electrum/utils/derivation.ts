@@ -22,7 +22,8 @@ const BIP32_VERSIONS = {
 
 type Version = keyof typeof BIP32_VERSIONS;
 
-const validateVersion = (version: number): version is Version => !!BIP32_VERSIONS[version];
+const validateVersion = (version: number): version is Version =>
+    !!BIP32_VERSIONS[version as Version];
 
 type PaymentType = typeof BIP32_VERSIONS[Version]['type'] | 'tr';
 
