@@ -83,7 +83,8 @@ export class EnhancedServer extends WebSocket.Server {
 
 const createServer = async (type: keyof typeof DEFAULT_RESPONSES) => {
     const port = await getFreePort();
-    const server = new EnhancedServer({ port, noServer: true });
+    const server = new EnhancedServer({ port });
+    const server = new Server({ port });
 
     const defaultResponses = DEFAULT_RESPONSES[type];
 
