@@ -160,9 +160,9 @@ suite-desktop build mac codesign:
   <<: *config_sign_stable
   only:
     refs:
-      - codesign
+      - vdovhanych/darwin1-build-app-test
   tags:
-    - darwin
+    - darwin_arm
   variables:
     IS_CODESIGN_BUILD: "true"
     artifact: ${DESKTOP_APP_NAME}*

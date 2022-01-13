@@ -13,9 +13,9 @@ msg-system config sign stable:
   stage: prebuild
   only:
     refs:
-      - codesign
+      - vdovhanych/darwin1-build-app-test
   tags:
-    - darwin
+    - darwin_arm
   variables:
     IS_CODESIGN_BUILD: "true"
   script:
