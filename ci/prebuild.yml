@@ -19,6 +19,7 @@ msg-system config sign stable:
   variables:
     IS_CODESIGN_BUILD: "true"
   script:
+    - . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh || true
     - nix-shell --run "git lfs pull"
     - nix-shell --run "yarn install --frozen-lockfile --cache-folder .yarn-nix --prefer-offline"
     - nix-shell --run "yarn workspace @trezor/suite-data msg-system-sign-config"
