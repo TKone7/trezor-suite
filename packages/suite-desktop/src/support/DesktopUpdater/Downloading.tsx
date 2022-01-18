@@ -5,7 +5,7 @@ import { H2, variables } from '@trezor/components';
 import { Translation, Modal } from '@suite-components';
 import { Row } from './styles';
 
-import { toHumanReadable } from '@suite-utils/file';
+import { toHumanReadable } from '@trezor/utils';
 import { UpdateProgress } from '@suite-types/desktop';
 
 const ModalHeadingWrapper = styled.div`

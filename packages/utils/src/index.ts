@@ -1,9 +1,9 @@
 export * from './promise';
 export * from './array';
+export * from './file';
 
 // Potential candidates for this package
 
-// trezor-suite/packages/suite/src/utils/suite/file.ts
 // trezor-suite/packages/suite/src/utils/suite/mergeObj.ts
 // trezor-suite/packages/suite/src/utils/suite/parseUri.ts
 // trezor-suite/packages/suite/src/utils/suite/random.ts

@@ -3,7 +3,7 @@ import si from 'systeminformation';
 
 import { isDev } from '@suite-utils/build';
 import { b2t } from '@desktop-electron/libs/utils';
-import { toHumanReadable } from '@suite-utils/file';
+import { toHumanReadable } from '@trezor/utils';
 
 export const buildInfo = () => {
     global.logger.info('build', [

@@ -14,7 +14,7 @@ import {
 import { isDev } from '@suite-utils/build';
 import { b2t } from '@desktop-electron/libs/utils';
 import { verifySignature } from '@desktop-electron/libs/update-checker';
-import { toHumanReadable } from '@suite-utils/file';
+import { toHumanReadable } from '@trezor/utils';
 import { isEnabled } from '@suite-utils/features';
 
 // Runtime flags
