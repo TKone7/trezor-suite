@@ -3,7 +3,7 @@ import { useForm, useController } from 'react-hook-form';
 import { useTranslation, useSelector, useActions } from '@suite-hooks';
 import * as protocolActions from '@suite-actions/protocolActions';
 import { isHex } from '@wallet-utils/ethUtils';
-import { isASCII } from '@suite-utils/validators';
+import { isASCII } from '@trezor/utils';
 import { isAddressValid } from '@wallet-utils/validation';
 import type { Account } from '@wallet-types';
 import type { AoppState } from '@suite-reducers/protocolReducer';

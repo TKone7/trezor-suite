@@ -6,7 +6,7 @@ import { Input, Button, variables } from '@trezor/components';
 import { Translation } from '@suite-components/Translation';
 import { Network } from '@suite/types/wallet';
 import { BlockbookUrl } from '@wallet-types/blockbook';
-import { isUrl } from '@suite-utils/validators';
+import { isUrl } from '@trezor/utils';
 import { useTranslation } from '@suite-hooks/useTranslation';
 import InputError from '@wallet-components/InputError';
 

@@ -4,7 +4,7 @@ import { Network } from '@wallet-types';
 import { variables, CoinLogo, Input, Button } from '@trezor/components';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from '@suite-hooks/useTranslation';
-import { isUrl } from '@suite-utils/validators';
+import { isUrl } from '@trezor/utils';
 import InputError from '@wallet-components/InputError';
 import { BlockbookUrl } from '@wallet-types/blockbook';
 
