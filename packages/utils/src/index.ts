@@ -2,11 +2,11 @@ export * from './promise';
 export * from './array';
 export * from './file';
 export * from './object';
+export * from './random';
 
 // Potential candidates for this package
 
 // trezor-suite/packages/suite/src/utils/suite/parseUri.ts
-// trezor-suite/packages/suite/src/utils/suite/random.ts
 // trezor-suite/packages/suite/src/utils/suite/string.ts
 // trezor-suite/packages/suite/src/utils/suite/validators.ts
 // trezor-suite/packages/suite/src/utils/wallet/validation.ts

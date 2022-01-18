@@ -4,7 +4,7 @@ import type { users } from 'dropbox';
 import { AbstractMetadataProvider } from '@suite-types/metadata';
 import { extractCredentialsFromAuthorizationFlow, getOauthReceiverUrl } from '@suite-utils/oauth';
 import { METADATA } from '@suite-actions/constants';
-import { getRandomId } from '@suite-utils/random';
+import { getRandomId } from '@trezor/utils';
 
 // this is incorrectly typed in dropbox
 

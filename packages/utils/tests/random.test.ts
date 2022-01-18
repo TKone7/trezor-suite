@@ -1,4 +1,4 @@
-import { getRandomId, getCodeChallenge } from '../random';
+import { getRandomId, getCodeChallenge } from '../src/random';
 
 describe('random', () => {
     describe('getRandomId', () => {

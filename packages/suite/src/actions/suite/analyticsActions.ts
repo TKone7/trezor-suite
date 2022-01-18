@@ -6,7 +6,7 @@
 
 import { ANALYTICS } from '@suite-actions/constants';
 import { Dispatch, GetState, AppState } from '@suite-types';
-import { getAnalyticsRandomId } from '@suite-utils/random';
+import { getAnalyticsRandomId } from '@trezor/utils';
 import { encodeDataToQueryString } from '@suite-utils/analytics';
 import { Account } from '@wallet-types';
 import { setOnBeforeUnloadListener, getLocationHostname, getEnvironment } from '@suite-utils/env';

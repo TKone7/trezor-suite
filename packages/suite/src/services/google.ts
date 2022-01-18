@@ -11,7 +11,7 @@
 import { OAuth2Client, CodeChallengeMethod } from 'google-auth-library';
 import { METADATA } from '@suite-actions/constants';
 import { extractCredentialsFromAuthorizationFlow, getOauthReceiverUrl } from '@suite-utils/oauth';
-import { getCodeChallenge } from '@suite-utils/random';
+import { getCodeChallenge } from '@trezor/utils';
 import { isWeb, isDesktop } from '@suite-utils/env';
 
 const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';

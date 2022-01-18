@@ -10,7 +10,7 @@ interface InitialState {
     analytics?: Partial<AnalyticsState>;
 }
 
-jest.mock('@suite-utils/random', () => ({
+jest.mock('@trezor/utils', () => ({
     __esModule: true, // this property makes it work
     getAnalyticsRandomId: () => 'very-random',
 }));
@@ -49,7 +49,7 @@ const oldWindowLocation = window.location;
 describe('Analytics Actions', () => {
     beforeAll(() => {
         // eslint-disable-next-line global-require
-        require('@suite-utils/random');
+        require('@trezor/utils');
 
         // @ts-ignore The operand of a 'delete' operator must be optional.
         delete window.location;
