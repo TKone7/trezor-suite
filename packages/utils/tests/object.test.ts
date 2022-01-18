@@ -1,4 +1,4 @@
-import { mergeObj } from '../mergeObj';
+import { mergeObj } from '../src/object';
 
 describe('mergeObj', () => {
     it('should deep merge two objects', () => {

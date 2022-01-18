@@ -1,5 +1,10 @@
 const units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
+/**
+ *
+ * @param bytes amount fo bytes
+ * @returns String with the human redable size of bytes
+ */
 export const toHumanReadable = (bytes: number): string => {
     let size = Math.abs(bytes);
     let i = 0;
