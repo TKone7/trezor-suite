@@ -62,16 +62,17 @@ const Preloader = ({ children, hideModals = false }: Props) => {
         getBackgroundRoute: routerActions.getBackgroundRoute,
     });
 
-    const { loading, loaded, error, dbError, router, transport, modal } = useSelector(state => ({
-        loading: state.suite.loading,
-        loaded: state.suite.loaded,
-        error: state.suite.error,
-        dbError: state.suite.dbError,
-        transport: state.suite.transport,
-        router: state.router,
-        modal: state.modal,
-    }));
-    const actionModalContext = modal.context;
+    const { loading, loaded, error, dbError, router, transport, actionModalContext } = useSelector(
+        state => ({
+            loading: state.suite.loading,
+            loaded: state.suite.loaded,
+            error: state.suite.error,
+            dbError: state.suite.dbError,
+            transport: state.suite.transport,
+            router: state.router,
+            actionModalContext: state.modal.context,
+        }),
+    );
 
     const { device, getDiscoveryStatus } = useDiscovery();
 
