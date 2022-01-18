@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { SettingsLayout } from '@settings-components';
 import { Translation } from '@suite-components';
 import { useSelector, useActions } from '@suite-hooks';
@@ -7,7 +8,7 @@ import { Network } from '@wallet-types';
 import * as walletSettingsActions from '@settings-actions/walletSettingsActions';
 import CoinsGroup from './components/CoinsGroup';
 
-const Settings = () => {
+const SettingsCoins = () => {
     const { changeCoinVisibility, changeNetworks } = useActions({
         changeCoinVisibility: walletSettingsActions.changeCoinVisibility,
         changeNetworks: walletSettingsActions.changeNetworks,
@@ -86,4 +87,4 @@ const Settings = () => {
     );
 };
 
-export default Settings;
+export default SettingsCoins;
