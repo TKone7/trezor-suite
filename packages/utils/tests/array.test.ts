@@ -1,4 +1,4 @@
-import { partition } from '../array';
+import { partition } from '../src/array';
 
 describe('Array utils', () => {
     describe('partition of the array by condition', () => {

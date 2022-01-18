@@ -9,7 +9,7 @@ import { useSelector, useActions } from '@suite-hooks';
 import * as accountActions from '@wallet-actions/accountActions';
 import * as walletSettingsActions from '@settings-actions/walletSettingsActions';
 import * as routerActions from '@suite-actions/routerActions';
-import { partition } from '@suite-utils/array';
+import { partition } from '@trezor/utils';
 
 import { AccountTypeSelect } from './components/AccountTypeSelect';
 import { SelectNetwork } from './components/SelectNetwork';
