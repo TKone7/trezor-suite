@@ -1,4 +1,4 @@
-import * as stringUtils from '../string';
+import * as stringUtils from '../src/string';
 
 it('capitalizeFirstLetter', () => {
     expect(stringUtils.capitalizeFirstLetter('god')).toBe('God');
