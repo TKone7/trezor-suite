@@ -34,10 +34,7 @@ export const init =
             // this type of event should not be emitted in "popup mode"
         });
 
-        // todo: should we use local connect by default, just like in suite?
-
         const connectSrc = process.env.TREZOR_CONNECT_SRC || 'https://localhost:8088/';
-        // 'https://connect.trezor.io/8/'
 
         const connectOptions = {
             connectSrc,

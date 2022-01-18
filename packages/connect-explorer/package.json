@@ -23,7 +23,6 @@
         "markdown-it-replace-link": "^1.0.1",
         "react": "17.0.1",
         "react-dom": "17.0.1",
-        "react-hot-loader": "4.6.5",
         "react-infinity-menu": "^4.0.0",
         "react-inspector": "^2.3.1",
         "react-json-tree": "^0.11.0",
@@ -34,8 +33,9 @@
         "redux-logger": "^3.0.6",
         "redux-thunk": "^2.3.0",
         "stringify-object": "^3.3.0",
-        "styled-components": "5.1.1",
-        "trezor-connect": "8.2.3-beta.4"
+        "styled-components": "^5.3.3",
+        "trezor-connect": "8.2.6-beta.2"
+
     },
     "devDependencies": {
         "@types/markdown-it": "12.2.3", 
