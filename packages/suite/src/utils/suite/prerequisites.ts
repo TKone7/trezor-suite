@@ -5,20 +5,20 @@ interface PrerequisitesInput {
     router: AppState['router'];
     device?: TrezorDevice;
     transport?: Partial<TransportInfo>;
-    modal: AppState['modal'];
 }
 
-const getPrerequisiteName = ({ router, device, transport, modal }: PrerequisitesInput) => {
+const getPrerequisiteName = ({ router, device, transport }: PrerequisitesInput) => {
     if (!router || router.app === 'unknown') return;
 
     // no transport available
     // todo: is transport-bridge good name? other prerequisites denote to the problem. this ones denotes to the solution
     if (transport && !transport.type) return 'transport-bridge';
 
-    if ('payload' in modal && modal.payload.type === 'disconnect-device')
-        return 'device-disconnect-required';
-
     if (!device) return 'device-disconnected';
+
+    if (device.reconnectRequested) {
+        return 'device-disconnect-required';
+    }
 
     // device features cannot be read, device is probably used in another window
     if (device.type === 'unacquired') return 'device-unacquired';
@@ -72,10 +72,10 @@ const getExcludedPrerequisites = (router: PrerequisitesInput['router']): Prerequ
 /**
  * Returns information about reason that is blocking user from interacting with Suite
  */
-export const getPrerequisites = ({ router, device, transport, modal }: PrerequisitesInput) => {
+export const getPrerequisites = ({ router, device, transport }: PrerequisitesInput) => {
     const excluded = getExcludedPrerequisites(router);
 
-    const prerequisite = getPrerequisiteName({ router, device, transport, modal });
+    const prerequisite = getPrerequisiteName({ router, device, transport });
 
     if (typeof prerequisite === 'undefined') return;
 

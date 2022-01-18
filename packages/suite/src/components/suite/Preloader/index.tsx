@@ -96,7 +96,7 @@ const Preloader = ({ children, hideModals = false }: Props) => {
     const hasActionModal = actionModalContext !== '@modal/context-none';
 
     // check prerequisites for requested app
-    const prerequisite = getPrerequisites({ router, transport, device, modal });
+    const prerequisite = getPrerequisites({ router, transport, device });
 
     // check if current route is a "foreground application" marked as isForegroundApp in router config
     // display it above requested physical route (route in url) or as fullscreen app
