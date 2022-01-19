@@ -98,7 +98,6 @@ export const useCardanoStaking = (): CardanoStaking => {
     const isStakingOnTrezorPool = !isFetching ? !!currentPool : true; // fallback to true to prevent flickering in UI while we fetch the data
     const isCurrentPoolOversaturated = currentPool ? isPoolOverSaturated(currentPool) : false;
 
-    console.log('isCurrentPoolOversaturated', isCurrentPoolOversaturated);
     const changeAddress = useMemo(() => getChangeAddressParameters(account), [account]);
 
     const prepareTxPlan = useCallback(
