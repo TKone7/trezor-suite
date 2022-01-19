@@ -4,16 +4,6 @@ const path = require('path');
 
 const { Controller } = require('../../websocket-client');
 
-const defaults = {
-    // some random empty seed. most of the test don't need any account history so it is better not to slow them down with all all seed
-    mnemonic:
-        'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
-    pin: '',
-    passphrase_protection: false,
-    label: 'My Trevor',
-    needs_backup: false,
-};
-
 const url = process.env.URL || 'http://localhost:8082/';
 const HEADLESS = process.env.HEADLESS === 'true';
 const SCREENSHOTS_DIR = './packages/connect-explorer/screenshots';
@@ -206,7 +196,6 @@ log(process.env);
                 await wait(1000)
                 await controller.send({ type: 'bridge-start', version: '2.0.27' });
                 await wait(1000)
-
 
                 log(f.method, "start");
 

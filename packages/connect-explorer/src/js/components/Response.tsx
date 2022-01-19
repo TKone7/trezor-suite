@@ -180,9 +180,9 @@ const Response: React.FC<Props> = props => {
                     case 'response': {
                         const json = props.response ? (
                             <Inspector data={props.response} expandLevel={10} />
-                        ) : null;
+                        ): null;
                         return (
-                            <Container>
+                            <Container data-test="@response">
                                 <CopyToClipboard data={stringifyObject(props.response)} />
                                 {json}
                             </Container>
@@ -192,25 +192,23 @@ const Response: React.FC<Props> = props => {
 
                     case 'code':
                         return (
-                            <>
-                                <CodeContainer>
-                                    <CopyToClipboard data={props.code} />
-                                    {props.code}
-                                </CodeContainer>
-                            </>
+                            <CodeContainer data-test="@code">
+                                <CopyToClipboard data={props.code} />
+                                {props.code}
+                            </CodeContainer>
                         );
                         break;
 
                     case 'docs':
                         return (
-                            <>
+                            <div data-test="@docs">
                                 <DocStyles />
                                 <Container
                                     className="docs-container"
                                     dangerouslySetInnerHTML={{ __html: props.docs! }}
                                 />
                                 ;
-                            </>
+                            </div>
                         );
                         break;
 

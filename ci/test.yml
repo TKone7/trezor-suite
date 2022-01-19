@@ -160,13 +160,8 @@ blockchain-link nightly:
   only:
     - schedules
 
-# @trezor/connect-popup
-connect-popup test integration:
-  # todo: we can run this only for develop branch for now as this 1] does not assertions anyway yet 2] won't be changing until we start refactoring popup
-  # only:
-  #   refs:
-  #     - develop
-  #     - schedules
+# @trezor/connect-explorer
+.e2e connect-explorer:
   stage: integration testing
   variables:
     COMPOSE_PROJECT_NAME: $CI_JOB_ID
@@ -184,5 +179,13 @@ connect-popup test integration:
     expire_in: 7 days
     when: always
     paths:
-      - ./packages/connect-explorer/screenshots
+      - ./packages/integration-tests/projects/connect-explorer/screenshots
       - connect-popup-overview.html
+
+connect-explorer:
+  extends: .e2e connect-explorer
+
+connect-explorer nightly:
+  extends: .e2e connect-explorer
+  only:
+    - schedules

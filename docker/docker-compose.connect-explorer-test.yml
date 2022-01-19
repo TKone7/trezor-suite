@@ -18,12 +18,9 @@ services:
     command: bash -c "TREZOR_CONNECT_SRC=https://connect.trezor.io/8/ yarn workspace @trezor/connect-explorer dev"
     network_mode: service:trezor-user-env-unix
 
-  test-open:
-    build:
-      context: .
-      dockerfile: ./puppeteer/Dockerfile
-    container_name: test-runner
-    ipc: host
+  test-run:
+    image: mcr.microsoft.com/playwright:focal
+    container_name: explorer-test-runner
     depends_on:
       - trezor-user-env-unix
       - connect-explorer-dev
@@ -32,8 +29,8 @@ services:
       - LOCAL_USER_ID=$LOCAL_USER_ID
       - DISPLAY=$DISPLAY
       - HEADLESS=false
-    working_dir: /e2e
-    command: bash -c "Xvfb :10 -ac & node ./packages/integration-tests/projects/connect-popup/index.js"
+    working_dir: /trezor-suite
+    command: bash -c "npx playwright install && docker/wait-for-env.sh && yarn workspace @trezor/integration-tests test:connect-explorer"
     volumes:
-      - ../:/e2e
+      - ../:/trezor-suite
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
