@@ -51,6 +51,8 @@ interface DesktopApi {
     getUserDataInfo: () => Result<{ dir: string }>;
     // Udev rules
     installUdevRules: () => Result;
+    // TrezorConnect
+    TrezorConnect: (method: string, ...params: any[]) => Promise<any>;
 }
 
 interface Window {
