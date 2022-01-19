@@ -26,8 +26,6 @@ jest.mock('react-svg', () => ({ ReactSVG: () => 'SVG' }));
 // render only Translation['id']
 jest.mock('@suite-components/Translation', () => ({ Translation: ({ id }: any) => id }));
 
-jest.mock('@fivebinaries/coin-selection', () => global.JestMocks.getCoinSelection());
-
 jest.mock('trezor-connect', () => global.JestMocks.getTrezorConnect({}));
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const TrezorConnect = require('trezor-connect').default;

@@ -14,7 +14,6 @@ import * as fixtures from '../__fixtures__/walletMiddleware';
 const { getWalletAccount } = global.JestMocks;
 
 jest.mock('trezor-connect', () => global.JestMocks.getTrezorConnect({}));
-jest.mock('@fivebinaries/coin-selection', () => global.JestMocks.getCoinSelection());
 const TrezorConnect = require('trezor-connect').default;
 
 type AccountsState = ReturnType<typeof accountsReducer>;

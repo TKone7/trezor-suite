@@ -248,11 +248,6 @@ const getWalletTransaction = (t?: Partial<WalletAccountTransaction>): WalletAcco
     ...t,
 });
 
-export const getCoinSelection = () => ({
-    __esModule: true,
-    default: () => {},
-});
-
 // Mocked TrezorConnect used in various tests
 const getTrezorConnect = <M>(methods?: M) => {
     // event listeners
@@ -620,7 +615,6 @@ declare global {
                 getConnectDevice: typeof getConnectDevice;
                 getSuiteDevice: typeof getSuiteDevice;
                 getWalletAccount: typeof getWalletAccount;
-                getCoinSelection: typeof getCoinSelection;
                 getWalletTransaction: typeof getWalletTransaction;
                 getTrezorConnect: typeof getTrezorConnect;
                 getMessageSystemConfig: typeof getMessageSystemConfig;
@@ -643,7 +637,6 @@ global.JestMocks = {
     getConnectDevice,
     getSuiteDevice,
     getWalletAccount,
-    getCoinSelection,
     getWalletTransaction,
     getTrezorConnect,
     getMessageSystemConfig,

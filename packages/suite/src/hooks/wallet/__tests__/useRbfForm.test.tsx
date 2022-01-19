@@ -18,8 +18,6 @@ jest.mock('@suite-actions/routerActions', () => ({
     goto: () => ({ type: 'mock-redirect' }),
 }));
 
-jest.mock('@fivebinaries/coin-selection', () => global.JestMocks.getCoinSelection());
-
 jest.mock('react-svg', () => ({ ReactSVG: () => 'SVG' }));
 
 // TrezorConnect.composeTransaction is trying to connect to blockchain, to get current block height.
