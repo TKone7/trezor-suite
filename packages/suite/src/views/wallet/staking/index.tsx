@@ -10,7 +10,7 @@ import { useSelector } from '@suite-hooks';
 const CardanoStakingLoaded = (props: {
     selectedAccount: Extract<AppState['wallet']['selectedAccount'], { status: 'loaded' }>;
 }) => {
-    const { isActive, isStakingOnTrezorPool } = useCardanoStaking();
+    const { isActive, isStakingOnTrezorPool, isCurrentPoolOversaturated } = useCardanoStaking();
 
     return (
         <WalletLayout
@@ -21,7 +21,9 @@ const CardanoStakingLoaded = (props: {
             <>
                 {isActive && <Rewards account={props.selectedAccount.account} />}
                 {!isActive && <Stake account={props.selectedAccount.account} />}
-                {isActive && isStakingOnTrezorPool === false && <Redelegate />}
+                {isActive && (isStakingOnTrezorPool === false || isCurrentPoolOversaturated) && (
+                    <Redelegate />
+                )}
             </>
         </WalletLayout>
     );

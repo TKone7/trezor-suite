@@ -26,6 +26,44 @@ describe('cardano utils', () => {
     expect(cardanoUtils.isCardanoExternalOutput({ address: 'addr1' }, {})).toBe(true);
     // @ts-ignore params are partial
     expect(cardanoUtils.isCardanoExternalOutput({ addressParameters: {} }, {})).toBe(false);
+    expect(
+        cardanoUtils.composeTxPlan(
+            'descriptor',
+            [],
+            [
+                {
+                    type: 0,
+                },
+                {
+                    path: 'path',
+                    pool: 'abc',
+                    type: 2,
+                },
+            ],
+            [{ amount: '10', path: 'path', stakeAddress: 'stkAddr' }],
+            {
+                address: 'addr',
+                addressParameters: {
+                    path: 'path',
+                    addressType: 0,
+                    stakingPath: 'stkpath',
+                },
+            },
+        ),
+    ).toMatchObject({
+        txPlan: undefined,
+        certificates: [
+            {
+                type: 0,
+            },
+            {
+                path: 'path',
+                pool: 'abc',
+                type: 2,
+            },
+        ],
+        withdrawals: [{ amount: '10', path: 'path', stakeAddress: 'stkAddr' }],
+    });
 
     fixtures.getChangeAddressParameters.forEach(f => {
         it(`getChangeAddressParameters: ${f.description}`, () => {
@@ -58,6 +96,28 @@ describe('cardano utils', () => {
     fixtures.parseAsset.forEach(f => {
         it(`parseAsset: ${f.description}`, () => {
             expect(cardanoUtils.parseAsset(f.hex)).toMatchObject(f.result);
+        });
+    });
+
+    fixtures.isPoolOverSaturated.forEach(f => {
+        it(`isPoolOverSaturated: ${f.description}`, () => {
+            // @ts-ignore params are partial
+            expect(cardanoUtils.isPoolOverSaturated(f.pool, f.additionalStake)).toBe(f.result);
+        });
+    });
+
+    fixtures.getStakePoolForDelegation.forEach(f => {
+        it(`getStakePoolForDelegation: ${f.description}`, () => {
+            expect(
+                cardanoUtils.getStakePoolForDelegation(f.trezorPools, f.accountBalance),
+            ).toMatchObject(f.result);
+        });
+    });
+    fixtures.getDelegationCertificates.forEach(f => {
+        it(`getDelegationCertificates: ${f.description}`, () => {
+            expect(
+                cardanoUtils.getDelegationCertificates(f.stakingPath, f.poolHex, f.shouldRegister),
+            ).toMatchObject(f.result);
         });
     });
 });

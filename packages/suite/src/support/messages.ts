@@ -7191,6 +7191,10 @@ export default defineMessages({
         id: 'TR_STAKING_DELEGATE',
         defaultMessage: 'Delegate',
     },
+    TR_STAKING_REDELEGATE: {
+        id: 'TR_STAKING_REDELEGATE',
+        defaultMessage: 'Redelegate',
+    },
     TR_STAKING_WITHDRAW: {
         id: 'TR_STAKING_WITHDRAW',
         defaultMessage: 'Withdraw',
@@ -7224,7 +7228,7 @@ export default defineMessages({
     },
     TR_STAKING_NOT_ENOUGH_FUNDS: {
         id: 'TR_STAKING_NOT_ENOUGH_FUNDS',
-        defaultMessage: "It seems you don't have enough funds on your account.",
+        defaultMessage: "You don't have enough funds on your account.",
     },
     TR_STAKING_TREZOR_POOL_FAIL: {
         id: 'TR_STAKING_TREZOR_POOL_FAIL',
@@ -7242,7 +7246,16 @@ export default defineMessages({
     TR_STAKING_ON_3RD_PARTY_DESCRIPTION: {
         id: 'TR_STAKING_ON_3RD_PARTY_DESCRIPTION',
         defaultMessage:
-            ' By staking on Trezor stake pool you are directly supporting Trezor and Cardano ecosystem within Trezor Suite.',
+            'By staking on Trezor stake pool you are directly supporting Trezor and Cardano ecosystem within Trezor Suite.',
+    },
+    TR_STAKING_POOL_OVERSATURATED_TITLE: {
+        id: 'TR_STAKING_POOL_OVERSATURATED_TITLE',
+        defaultMessage: 'Stake pool is oversaturated',
+    },
+    TR_STAKING_POOL_OVERSATURATED_DESCRIPTION: {
+        id: 'TR_STAKING_POOL_OVERSATURATED_DESCRIPTION',
+        defaultMessage:
+            'Stake pool your are delegating on is oversaturated. Please redelegate your stake to maximize your staking rewards',
     },
     TR_RECEIVING_SYMBOL: {
         id: 'TR_RECEIVING_SYMBOL',

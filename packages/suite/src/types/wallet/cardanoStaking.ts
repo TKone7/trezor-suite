@@ -4,10 +4,20 @@ export interface PendingStakeTx {
     blockHeight: number;
 }
 
-export interface StakingPool {
+export interface StakePool {
     hex: string;
     bech32: string;
+    // eslint-disable-next-line camelcase
+    live_stake: string;
+    saturation: string;
 }
+
+export type PoolsResponse =
+    | {
+          next: StakePool;
+          pools: StakePool[];
+      }
+    | undefined;
 
 export type CardanoStaking = {
     address: string;
@@ -34,6 +44,8 @@ export type CardanoStaking = {
     deposit?: string;
     registeredPoolId: string | null;
     isStakingOnTrezorPool: boolean | null;
+    isCurrentPoolOversaturated: boolean;
+    trezorPools: PoolsResponse;
     isActive: boolean;
     rewards: string;
     delegate(): void;

@@ -1,5 +1,11 @@
-import { CARDANO, CardanoCertificate, CardanoCertificateType, CardanoOutput } from 'trezor-connect';
-import { types } from '@fivebinaries/coin-selection';
+import {
+    CARDANO,
+    CardanoAddressType,
+    CardanoCertificate,
+    CardanoCertificateType,
+    CardanoOutput,
+} from 'trezor-connect';
+import { coinSelection, types } from '@fivebinaries/coin-selection';
 import { amountToSatoshi } from '@wallet-utils/accountUtils';
 import { Account } from '@wallet-types';
 import {
@@ -7,6 +13,8 @@ import {
     PrecomposedTransactionFinal,
     PrecomposedTransactionFinalCardano,
 } from '@wallet-types/sendForm';
+import BigNumber from 'bignumber.js';
+import { PoolsResponse, StakePool } from '@suite/types/wallet/cardanoStaking';
 
 export const getProtocolMagic = (accountSymbol: Account['symbol']) =>
     accountSymbol === 'ada' ? CARDANO.PROTOCOL_MAGICS.mainnet : 1097911063;
@@ -128,6 +136,74 @@ export const parseAsset = (
     };
 };
 
+export const getDelegationCertificates = (
+    stakingPath: string,
+    poolHex: string | undefined,
+    shouldRegister: boolean,
+) => {
+    const result: CardanoCertificate[] = [
+        {
+            type: CardanoCertificateType.STAKE_DELEGATION,
+            path: stakingPath,
+            pool: poolHex,
+        },
+    ];
+
+    if (shouldRegister) {
+        result.unshift({
+            type: CardanoCertificateType.STAKE_REGISTRATION,
+            path: stakingPath,
+        });
+    }
+
+    return result;
+};
+
+export const composeTxPlan = (
+    descriptor: string,
+    utxo: Account['utxo'],
+    certificates: CardanoCertificate[],
+    withdrawals: { amount: string; path: string; stakeAddress: string }[],
+    changeAddress: {
+        address: string;
+        addressParameters: {
+            path: string;
+            addressType: CardanoAddressType;
+            stakingPath: string;
+        };
+    },
+) => {
+    const txPlan = coinSelection(
+        transformUtxos(utxo),
+        [],
+        changeAddress.address,
+        prepareCertificates(certificates),
+        withdrawals,
+        descriptor,
+    );
+
+    return { txPlan, certificates, withdrawals, changeAddress };
+};
+
+export const isPoolOverSaturated = (pool: StakePool, additionalStake?: string) =>
+    new BigNumber(pool.live_stake)
+        .plus(additionalStake ?? '0')
+        .div(pool.saturation)
+        .toNumber() > 0.8;
+
+export const getStakePoolForDelegation = (
+    trezorPools: NonNullable<PoolsResponse>,
+    accountBalance: string,
+) => {
+    // sorted from least saturated to most
+    trezorPools.pools.sort((a, b) => new BigNumber(a.live_stake).comparedTo(b.live_stake));
+    let pool = trezorPools.next;
+    if (isPoolOverSaturated(pool, accountBalance)) {
+        // eslint-disable-next-line prefer-destructuring
+        pool = trezorPools.pools[0];
+    }
+    return pool;
+};
 // Type guard to differentiate between PrecomposedTransactionFinal and PrecomposedTransactionFinalCardano
 export const isCardanoTx = (
     account: Account,

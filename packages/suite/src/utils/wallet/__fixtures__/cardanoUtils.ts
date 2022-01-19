@@ -359,3 +359,194 @@ export const parseAsset = [
         },
     },
 ];
+
+export const isPoolOverSaturated = [
+    {
+        description: 'missing data',
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+        },
+        additionalStake: undefined,
+        result: false,
+    },
+    {
+        description: 'not saturated',
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '0',
+            saturation: '60000000',
+        },
+        additionalStake: undefined,
+        result: false,
+    },
+    {
+        description: 'not saturated',
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '10000000',
+            saturation: '60000000',
+        },
+        additionalStake: undefined,
+        result: false,
+    },
+    {
+        description: 'oversaturation',
+        // 83 % saturation
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '50000000',
+            saturation: '60000000',
+        },
+        additionalStake: undefined,
+        result: true,
+    },
+    {
+        description: 'over the top oversaturation',
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '70000000',
+            saturation: '60000000',
+        },
+        additionalStake: undefined,
+        result: true,
+    },
+    {
+        description: "balance can't cause oversaturation",
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '30000000',
+            saturation: '60000000',
+        },
+        additionalStake: '10000000',
+        // 66 % including balance
+        result: false,
+    },
+    {
+        description: 'balance would cause oversaturation',
+        // 83 % saturation
+        pool: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '40000000',
+            saturation: '60000000',
+        },
+        additionalStake: '10000000',
+        result: true,
+    },
+];
+
+export const getStakePoolForDelegation = [
+    {
+        description: 'should pick "next" pool',
+        trezorPools: {
+            next: {
+                hex: 'a',
+                bech32: 'pool1a',
+                live_stake: '40000000',
+                saturation: '60000000',
+            },
+            pools: [
+                {
+                    hex: 'abc',
+                    bech32: 'pool1abc',
+                    live_stake: '0',
+                    saturation: '60000000',
+                },
+                {
+                    hex: 'a',
+                    bech32: 'pool1a',
+                    live_stake: '40000000',
+                    saturation: '60000000',
+                },
+                {
+                    hex: 'b',
+                    bech32: 'pool1a',
+                    live_stake: '50000000',
+                    saturation: '60000000',
+                },
+            ],
+        },
+        accountBalance: '0',
+        result: {
+            hex: 'a',
+            bech32: 'pool1a',
+            live_stake: '40000000',
+            saturation: '60000000',
+        },
+    },
+    {
+        description: 'should pick pool abc',
+        trezorPools: {
+            next: {
+                hex: 'a',
+                bech32: 'pool1a',
+                live_stake: '40000000',
+                saturation: '60000000',
+            },
+            pools: [
+                {
+                    hex: 'a',
+                    bech32: 'pool1a',
+                    live_stake: '40000000',
+                    saturation: '60000000',
+                },
+                {
+                    hex: 'abc',
+                    bech32: 'pool1abc',
+                    live_stake: '10000000',
+                    saturation: '60000000',
+                },
+                {
+                    hex: 'b',
+                    bech32: 'pool1a',
+                    live_stake: '50000000',
+                    saturation: '60000000',
+                },
+            ],
+        },
+        accountBalance: '10000000',
+        result: {
+            hex: 'abc',
+            bech32: 'pool1abc',
+            live_stake: '10000000',
+            saturation: '60000000',
+        },
+    },
+];
+export const getDelegationCertificates = [
+    {
+        description: 'without registration',
+        stakingPath: 'path',
+        poolHex: 'abc',
+        shouldRegister: false,
+        result: [
+            {
+                path: 'path',
+                pool: 'abc',
+                type: 2,
+            },
+        ],
+    },
+    {
+        description: 'withowithut registration',
+        stakingPath: 'path',
+        poolHex: 'abc',
+        shouldRegister: true,
+        result: [
+            {
+                type: 0,
+            },
+            {
+                path: 'path',
+                pool: 'abc',
+                type: 2,
+            },
+        ],
+    },
+];
