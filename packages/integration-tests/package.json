@@ -9,7 +9,7 @@
         "test:transport": "jest --verbose -c ./projects/transport/jest.config.js"
     },
     "dependencies": {
-        "cypress": "9.2.1",
+        "cypress": "9.3.1",
         "express": "4.17.1",
         "ts-loader": "^9.2.5",
         "webpack": "^5.55.1"
