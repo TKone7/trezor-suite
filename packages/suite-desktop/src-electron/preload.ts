@@ -120,10 +120,18 @@ contextBridge.exposeInMainWorld('desktopApi', {
 
     // TrezorConnect
     TrezorConnect: (method: string, ...args: any[]) => {
+        if (method === 'init') {
+            ipcRenderer.on('trezor-connect-event', (_, event) => {
+                ipcListeners.filter(l => l.type === event.event).forEach(l => l.listener(event));
+                ipcListeners
+                    .filter(l => l.type === event.type)
+                    .forEach(l => l.listener(event.payload));
+            });
+        }
         if (method === 'on') {
-            addIpcListener(`trezor-connect-event/${args[0]}`, args[1]);
+            addIpcListener(args[0], args[1]);
         } else if (method === 'off') {
-            removeIpcListener(`trezor-connect-event/${args[0]}`, args[1]);
+            removeIpcListener(args[0], args[1]);
         } else {
             return ipcRenderer.invoke('trezor-connect-call', [method, ...args]);
         }
