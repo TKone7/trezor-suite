@@ -98,6 +98,9 @@ export type ToastPayload = (
           message: string;
           asset: Network['symbol'];
       }
+    | {
+          type: 'invity-logout-successful';
+      }
 ) &
     Options;
 
