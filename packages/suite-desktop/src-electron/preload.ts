@@ -59,6 +59,8 @@ const removeIpcListener = (type: string, fn: IpcListener['listener']) => {
     }
 };
 
+let ipcID = 0;
+
 contextBridge.exposeInMainWorld('desktopApi', {
     on: (channel: string, func: (...args: any[]) => any) => {
         if (validChannels.includes(channel)) {
@@ -127,13 +129,22 @@ contextBridge.exposeInMainWorld('desktopApi', {
                     .filter(l => l.type === event.type)
                     .forEach(l => l.listener(event.payload));
             });
+            ipcRenderer.send('trezor-connect-init');
         }
         if (method === 'on') {
             addIpcListener(args[0], args[1]);
         } else if (method === 'off') {
             removeIpcListener(args[0], args[1]);
         } else {
-            return ipcRenderer.invoke('trezor-connect-call', [method, ...args]);
+            // const r = await ipcRenderer.invoke('trezor-connect-call', [method, ...args]);
+            // console.warn('RESPONSE', r);
+            // return r;
+            return new Promise(resolve => {
+                ipcID++;
+                const responseEvent = `trezor-connect-response/${ipcID}`;
+                ipcRenderer.once(responseEvent, (_, r) => resolve(r));
+                ipcRenderer.send('call', [method, responseEvent, ...args]);
+            });
         }
     },
 });
