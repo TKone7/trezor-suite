@@ -43,27 +43,29 @@ export const onBeforePopState = () => (_dispatch: Dispatch, getState: GetState) 
  * Called from ./support/RouterHandler
  * @param {string} url
  */
-export const onLocationChange = (url: string) => (dispatch: Dispatch, getState: GetState) => {
-    const unlocked = dispatch(onBeforePopState());
-    if (!unlocked) return;
-    const { router } = getState();
-    if (router.pathname === url && router.app !== 'unknown') return null;
-    // TODO: check if the view is not locked by the device request
+export const onLocationChange =
+    (url: string, anchor?: string) => (dispatch: Dispatch, getState: GetState) => {
+        const unlocked = dispatch(onBeforePopState());
+        if (!unlocked) return;
+        const { router } = getState();
+        if (router.pathname === url && router.app !== 'unknown') return null;
+        // TODO: check if the view is not locked by the device request
 
-    const [pathname, hash] = url.split('#');
+        const [pathname, hash] = url.split('#');
 
-    const appWithParams = getAppWithParams(url);
+        const appWithParams = getAppWithParams(url);
 
-    return dispatch({
-        type: ROUTER.LOCATION_CHANGE,
-        payload: {
-            url,
-            pathname,
-            hash,
-            ...appWithParams,
-        },
-    });
-};
+        return dispatch({
+            type: ROUTER.LOCATION_CHANGE,
+            payload: {
+                url,
+                pathname,
+                hash,
+                anchor,
+                ...appWithParams,
+            },
+        });
+    };
 
 /**
  * Dispatch initial url
@@ -80,7 +82,7 @@ export const init = () => (dispatch: Dispatch, getState: GetState) => {
 
 // links inside of application
 export const goto =
-    (routeName: Route['name'], params?: RouteParams, preserveParams = false) =>
+    (routeName: Route['name'], params?: RouteParams, preserveParams?: boolean, anchor?: string) =>
     (dispatch: Dispatch, getState: GetState) => {
         const { suite, router } = getState();
         const hasRouterLock = suite.locks.includes(SUITE.LOCK_TYPE.ROUTER);
@@ -94,7 +96,7 @@ export const goto =
         if (urlBase === router.url) return;
 
         const newUrl = `${urlBase}${preserveParams ? history.location.hash : ''}`;
-        dispatch(onLocationChange(newUrl));
+        dispatch(onLocationChange(newUrl, anchor));
 
         const route = findRouteByName(routeName);
         if (route?.isForegroundApp) {
@@ -134,7 +136,7 @@ export const closeModalApp =
             history.push(getPrefixedURL(history.location.pathname));
         } else {
             // + history.location.hash is here to preserve params (eg nth account)
-            dispatch(onLocationChange(history.location.pathname + history.location.hash));
+            dispatch(onLocationChange(`${history.location.pathname}${history.location.hash}`));
         }
     };
 

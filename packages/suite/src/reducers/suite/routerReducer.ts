@@ -8,6 +8,7 @@ type State = {
     pathname: string;
     hash?: string;
     settingsBackRoute: SettingsBackRoute;
+    anchor?: string;
 } & RouterAppWithParams;
 
 const initialState: State = {

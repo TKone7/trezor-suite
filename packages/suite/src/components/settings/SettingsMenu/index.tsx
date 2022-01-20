@@ -47,7 +47,7 @@ const SettingsMenu = () => {
                             position: 'primary',
                             'data-test': '@settings/menu/general',
                             callback: () => {
-                                goto('settings-index', undefined, true);
+                                goto('settings-index', undefined, true, 'labeling');
                             },
                         },
                         {
@@ -56,7 +56,7 @@ const SettingsMenu = () => {
                             position: 'primary',
                             'data-test': '@settings/menu/device',
                             callback: () => {
-                                goto('settings-device', undefined, true);
+                                goto('settings-device', undefined, true, 'device-label');
                             },
                         },
                         {

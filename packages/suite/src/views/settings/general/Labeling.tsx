@@ -5,10 +5,13 @@ import { Translation } from '@suite-components';
 import { ActionColumn, SectionItem, TextColumn } from '@suite-components/Settings';
 import { useSelector, useActions, useDevice } from '@suite-hooks';
 import * as metadataActions from '@suite-actions/metadataActions';
+import { useAnchor } from '@suite-hooks/useAnchor';
 
 export const Labeling = () => {
     const { isLocked, device } = useDevice();
     const isDeviceLocked = device && isLocked();
+
+    const { anchorRef, shouldHighlight } = useAnchor('labeling');
 
     const { initMetadata, disableMetadata } = useActions({
         initMetadata: metadataActions.init,
@@ -20,7 +23,11 @@ export const Labeling = () => {
     }));
 
     return (
-        <SectionItem data-test="@settings/metadata">
+        <SectionItem
+            data-test="@settings/metadata"
+            ref={anchorRef}
+            shouldHighlight={shouldHighlight}
+        >
             <TextColumn
                 title={<Translation id="TR_LABELING_ENABLED" />}
                 description={<Translation id="TR_LABELING_FEATURE_ALLOWS" />}
