@@ -1,5 +1,4 @@
 const CELL_DELIMITERS = [',', ';', '\t', '|', '^'];
-// const LINE_DELIMITERS = ['\r\n', '\r', '\n'];
 
 type Result = { [key: string]: string };
 
