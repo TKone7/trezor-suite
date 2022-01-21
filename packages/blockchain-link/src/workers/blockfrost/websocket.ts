@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import { EventEmitter } from 'events';
-import { createDeferred } from '@trezor/utils';
+import { createDeferred, Deferred } from '@trezor/utils/lib/promise';
 
 import { CustomError } from '../../constants/errors';
 import type { Send, BlockContent, BlockfrostTransaction } from '../../types/blockfrost';
@@ -9,8 +9,6 @@ import {
     EstimateFeeParams,
     AccountBalanceHistoryParams,
 } from '../../types/params';
-
-import type { Deferred } from '@trezor/utils';
 
 const NOT_INITIALIZED = new CustomError('websocket_not_initialized');
 

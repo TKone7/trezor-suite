@@ -14,7 +14,7 @@ export const useAsyncDebounce = () => {
             // clear previous timeout
             if (timeout.current) clearTimeout(timeout.current);
             // set new timeout
-            const timeoutDfd = createDeferred(-1);
+            const timeoutDfd = createDeferred();
             // @ts-ignore needed with @types/react-native 0.63.45, could be a bug
             const newTimeout = setTimeout(timeoutDfd.resolve, 300);
             // @ts-ignore needed with @types/react-native 0.63.45, could be a bug

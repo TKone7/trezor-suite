@@ -222,7 +222,7 @@ type DeferredPayload<T extends DeferredModals['type']> = { type: T } & DeferredR
 export const openDeferredModal =
     <T extends DeferredModals['type']>(payload: DeferredPayload<T>) =>
     (dispatch: Dispatch) => {
-        const dfd = createDeferred<DeferredResponse<DeferredModal<T>['decision']>>(-1);
+        const dfd = createDeferred<DeferredResponse<DeferredModal<T>['decision']>>();
         dispatch({
             type: MODAL.OPEN_USER_CONTEXT,
             payload: {

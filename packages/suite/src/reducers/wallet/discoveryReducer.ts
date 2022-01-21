@@ -46,7 +46,7 @@ const start = (draft: State, payload: PartialDiscovery) => {
         draft[index] = {
             ...draft[index],
             ...payload,
-            running: createDeferred(-1),
+            running: createDeferred(),
         };
     }
 };

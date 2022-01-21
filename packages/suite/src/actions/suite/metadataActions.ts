@@ -216,7 +216,7 @@ export const disableMetadata = () => (dispatch: Dispatch) => {
 };
 
 export const initProvider = () => (dispatch: Dispatch) => {
-    const decision = createDeferred<boolean>(-1);
+    const decision = createDeferred<boolean>();
     dispatch(modalActions.openModal({ type: 'metadata-provider', decision }));
     return decision.promise;
 };

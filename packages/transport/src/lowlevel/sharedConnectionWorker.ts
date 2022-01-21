@@ -33,7 +33,7 @@ let waitPromise: Promise<void> = Promise.resolve();
 type PortObject = { postMessage: (message: Object) => void };
 
 function startLock(): void {
-    const newLock = createDeferred(-1);
+    const newLock = createDeferred();
     lock = newLock;
     setTimeout(() => newLock.reject(new Error(`Timed out`)), 10 * 1000);
 }

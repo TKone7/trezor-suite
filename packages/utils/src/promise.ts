@@ -1,4 +1,4 @@
-export const createDeferred = <T>(id: number | string) => {
+export const createDeferred = <T, P = string | number | undefined>(id?: P) => {
     let localResolve: (t: T) => void = () => {};
     let localReject: (e?: Error) => void = () => {};
 
@@ -15,8 +15,8 @@ export const createDeferred = <T>(id: number | string) => {
     };
 };
 
-export interface Deferred<T> {
-    id: number | string;
+export interface Deferred<T, P = string | number | undefined> {
+    id: P;
     promise: Promise<T>;
     resolve: (t: T) => void;
     reject: (e: Error) => void;
