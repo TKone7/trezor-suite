@@ -69,11 +69,11 @@ const BackendRow = ({
     );
 };
 
-type Props = {
+type BackendsDropdownProps = {
     marginLeft?: boolean;
 };
 
-const BackendsDropdown = (props: Props) => {
+const BackendsDropdown = ({ marginLeft }: BackendsDropdownProps) => {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef<DropdownRef>();
     const { backends, blockchain } = useSelector(state => ({
@@ -94,7 +94,7 @@ const BackendsDropdown = (props: Props) => {
         .map(([coin, settings]) => ({ coin, ...settings }));
 
     return (
-        <Wrapper {...props}>
+        <Wrapper marginLeft={marginLeft}>
             <Dropdown
                 onToggle={() => setOpen(!open)}
                 ref={dropdownRef}
