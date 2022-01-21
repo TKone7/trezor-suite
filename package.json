@@ -30,7 +30,8 @@
         "suite:build:web": "yarn workspace @trezor/suite-web build",
         "type-check": "yarn lerna run type-check",
         "lint": "yarn lerna run lint",
-        "lint-staged": "npx lint-staged"
+        "lint-staged": "npx lint-staged",
+        "deduplicate": "yarn-deduplicate && yarn"
     },
     "lint-staged": {
         "packages/**/*.{ts,tsx}": [
@@ -83,6 +84,7 @@
         "ts-jest": "^26.5.4",
         "ts-node": "^10.3.0",
         "tsconfig-paths": "^3.9.0",
-        "typescript": "4.4.4"
+        "typescript": "4.4.4",
+        "yarn-deduplicate": "^3.1.0"
     }
 }
