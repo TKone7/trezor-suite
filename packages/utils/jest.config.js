@@ -11,7 +11,6 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: ['**/src/**/*.ts'],
     modulePathIgnorePatterns: ['node_modules'],
-    // setupFiles: ['./tests/jest.setup.js'],
     transform: {
         '^.+\\.ts$': 'ts-jest',
     },

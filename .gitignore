@@ -25,8 +25,6 @@ logs
 *.log
 .yarnclean
 
-coverage
-
 .attic
 .env*
 !.env.dev
@@ -42,3 +40,7 @@ docker/trezor-user-env/controller/emulator.img
 
 # Vagrant
 .vagrant
+
+# Build directories for packages
+coverage
+lib
