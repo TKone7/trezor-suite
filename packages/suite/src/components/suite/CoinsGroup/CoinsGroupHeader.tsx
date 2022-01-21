@@ -1,6 +1,6 @@
 import React from 'react';
 import { transparentize } from 'polished';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { variables, Icon } from '@trezor/components';
 import { Translation } from '@suite-components';
 
@@ -18,12 +18,17 @@ const CoinsCount = styled.div`
     text-transform: lowercase;
 `;
 
-const SettingsWrapper = styled.div`
+const SettingsWrapper = styled.div<{ disabled: boolean }>`
     border-radius: 100%;
     margin: -10px;
     padding: 10px;
     transition: 0.3s ease;
     cursor: pointer;
+    ${props =>
+        props.disabled &&
+        css`
+            visibility: hidden;
+        `}
     &:hover {
         background-color: ${props =>
             transparentize(
@@ -55,7 +60,7 @@ const CoinsGroupHeader = ({ active, total, label, settingsMode, toggleSettingsMo
                 {active} <Translation id="TR_ACTIVE" />
             </CoinsCount>
         )}
-        <SettingsWrapper onClick={toggleSettingsMode}>
+        <SettingsWrapper onClick={toggleSettingsMode} disabled={!active}>
             <Icon icon={settingsMode ? 'CROSS' : 'SETTINGS'} />
         </SettingsWrapper>
     </Wrapper>
