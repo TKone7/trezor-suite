@@ -38,21 +38,23 @@ const CoinsList = ({
             {networks.map(({ symbol, label, tooltip, name }) => {
                 const toggled = !!selectedNetworks?.includes(symbol);
                 const unavailable = device?.unavailableCapabilities?.[symbol];
-                const disabled = !!unavailable || isLocked(true);
-                const unavailabilityTooltip = unavailable && (
-                    <Translation
-                        id={getUnavailabilityMessage(unavailable, device.features?.major_version)}
-                    />
-                );
-                const commonTooltip = tooltip && <Translation id={tooltip} />;
+                const locked = isLocked();
+
+                const lockedTooltip = locked && 'TR_DISABLED_SWITCH_TOOLTIP';
+                const unavailabilityTooltip =
+                    unavailable &&
+                    getUnavailabilityMessage(unavailable, device.features?.major_version);
+                const anyTooltip = lockedTooltip || unavailabilityTooltip || tooltip;
+
                 const backend = backends[symbol];
                 const note = backend && !backend.tor ? 'TR_CUSTOM_BACKEND' : label;
+                const disabled = !!unavailable || locked;
 
                 return (
                     <Tooltip
                         key={symbol}
                         placement="top"
-                        content={unavailabilityTooltip || commonTooltip}
+                        content={anyTooltip && <Translation id={anyTooltip} />}
                     >
                         <Coin
                             symbol={symbol}
