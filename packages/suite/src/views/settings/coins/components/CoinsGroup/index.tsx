@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { P, Switch, Icon, variables, Button, useTheme } from '@trezor/components';
+import { P, Switch, Icon, variables, Button, Tooltip, useTheme } from '@trezor/components';
 import { Translation } from '@suite-components';
 import { NETWORKS } from '@wallet-config';
 import { Network } from '@wallet-types';
@@ -202,14 +202,28 @@ const CoinsGroup = ({
                                             <Translation id="TR_ADVANCED_SETTINGS" />
                                         </AdvancedSettingsText>
                                     </AdvancedSettings>
-                                    <Switch
-                                        data-test={`@settings/wallet/network/${network.symbol}`}
-                                        onChange={(visible: boolean) => {
-                                            onToggleOneFn(network.symbol, visible);
-                                        }}
-                                        checked={enabledNetworks.includes(network.symbol)}
-                                        isDisabled={isDeviceLocked}
-                                    />
+
+                                    <Tooltip
+                                        maxWidth={280}
+                                        offset={10}
+                                        placement="top"
+                                        dashed={false}
+                                        cursor="default"
+                                        content={
+                                            isDeviceLocked && (
+                                                <Translation id="TR_DISABLED_SWITCH_TOOLTIP" />
+                                            )
+                                        }
+                                    >
+                                        <Switch
+                                            data-test={`@settings/wallet/network/${network.symbol}`}
+                                            onChange={(visible: boolean) => {
+                                                onToggleOneFn(network.symbol, visible);
+                                            }}
+                                            checked={enabledNetworks.includes(network.symbol)}
+                                            isDisabled={isDeviceLocked}
+                                        />
+                                    </Tooltip>
                                 </>
                             ) : (
                                 <UnavailableLabel>
