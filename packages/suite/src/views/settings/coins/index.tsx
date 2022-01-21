@@ -1,7 +1,8 @@
 import React from 'react';
 import { SettingsLayout } from '@settings-components';
 import { Translation } from '@suite-components';
-import { useSelector, useActions } from '@suite-hooks';
+import { DeviceBanner } from '@suite-components/Settings';
+import { useSelector, useActions, useDevice } from '@suite-hooks';
 import { NETWORKS } from '@wallet-config';
 import { Network } from '@wallet-types';
 import * as walletSettingsActions from '@settings-actions/walletSettingsActions';
@@ -35,6 +36,9 @@ const Settings = () => {
     const enabledMainnetNetworks: Network['symbol'][] = [];
     const enabledTestnetNetworks: Network['symbol'][] = [];
 
+    const { isLocked } = useDevice();
+    const isDeviceLocked = !!device && isLocked();
+
     enabledNetworks.forEach(symbol => {
         const network = NETWORKS.find(n => n.symbol === symbol);
         if (!network) return;
@@ -47,6 +51,14 @@ const Settings = () => {
 
     return (
         <SettingsLayout>
+            {isDeviceLocked && (
+                <DeviceBanner
+                    title={<Translation id="TR_SETTINGS_DEVICE_BANNER_TITLE_UNAVAILABLE" />}
+                    description={
+                        <Translation id="TR_SETTINGS_DEVICE_BANNER_DESCRIPTION_UNAVAILABLE" />
+                    }
+                />
+            )}
             <CoinsGroup
                 label={<Translation id="TR_COINS" />}
                 description={<Translation id="TR_COINS_SETTINGS_ALSO_DEFINES" />}
