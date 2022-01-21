@@ -6,7 +6,7 @@ import { Translation } from '@suite-components';
 import type { ExtendedMessageDescriptor } from '@suite-types';
 import type { Network } from '@wallet-types';
 
-const SettingsWrapper = styled.div<{ onClick: any }>`
+const SettingsWrapper = styled.div<{ onClick: ((e: React.MouseEvent) => void) | undefined }>`
     display: flex;
     align-self: stretch;
     align-items: center;
