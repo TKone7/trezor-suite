@@ -7,11 +7,11 @@ const InlineTooltip = styled(Tooltip)`
     margin: 0 4px;
 `;
 
-type Props = {
+type TooltipSymbolProps = {
     content: React.ReactNode;
 };
 
-const TooltipSymbol = ({ content }: Props) => {
+const TooltipSymbol = ({ content }: TooltipSymbolProps) => {
     const theme = useTheme();
     return (
         <InlineTooltip content={content}>
